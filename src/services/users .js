@@ -16,14 +16,14 @@ export function getById (id) {
 }
 export function getByEmail(email) {
     const data = getAll();
-    return data.find(p => p.email === email);
+    return data.find(p => p.email.toLowerCase() === email.toLowerCase());
 }
 export async function verifyPassword(hashedPasword, password) {
     const isValid = await compare(password, hashedPasword);
     return isValid;
 }
 
-export async function save (email, password) {
+export async function save (email, password, firstName, lastName) {
     const found = getByEmail(email);
     if (found) {
         throw new Error("user already exist.");
@@ -33,6 +33,8 @@ export async function save (email, password) {
     data.push({
         id: data.length + 1,
         email,
+        firstName,
+        lastName,
         password: hashedpassword
     });
     fs.writeFileSync(filePath, JSON.stringify(data));
